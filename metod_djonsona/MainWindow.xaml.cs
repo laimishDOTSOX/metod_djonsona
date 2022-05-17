@@ -20,10 +20,12 @@ namespace metod_djonsona
     /// </summary>
     public partial class MainWindow : Window
     {
-        TextBox[,] all_boxes = new TextBox[2, 10];
+        List<Boxes_detals> boxes_Detals = new List<Boxes_detals>();
+        List<Boxes_detals> mane_boxes_Detals = new List<Boxes_detals>();
         public MainWindow()
         {
             InitializeComponent();
+            Random rn = new Random();
             int count = answer_array_one.ColumnDefinitions.Count;
             for (int i = 0; i < count; i++)
             {
@@ -36,7 +38,10 @@ namespace metod_djonsona
                 box.IsReadOnly = true;
                 answer_array_one.Children.Add(box);
                 Grid.SetColumn(box,i);
-                all_boxes[0, i] = box;
+                boxes_Detals.Add(new Boxes_detals()
+                {
+                    time_one = box
+                });
             }
             for (int i = 0; i < count; i++)
             {
@@ -49,8 +54,40 @@ namespace metod_djonsona
                 box.IsReadOnly = true;
                 answer_array_two.Children.Add(box);
                 Grid.SetColumn(box, i);
-                all_boxes[1, i] = box;
+                boxes_Detals[i].time_two = box;
             }
+            for (int i = 0; i < count; i++)
+            {
+                TextBox box = new TextBox();
+                box.BorderBrush = Brushes.White;
+                box.BorderThickness = new Thickness(1,0,1,1);
+                box.Foreground = Brushes.White;
+                box.Background = Brushes.Black;
+                box.FontSize = 30;
+                box.TextAlignment = TextAlignment.Center;
+                box.VerticalContentAlignment = VerticalAlignment.Center;
+                box.IsReadOnly = true;
+                box.Text = $"{i + 1}";
+                array_number.Children.Add(box);
+                Grid.SetColumn(box, i);
+                boxes_Detals[i].number = box;
+            }
+
+            int c = 0;
+            foreach (var item in mane_array_one.Children.OfType<TextBox>())
+            {
+                mane_boxes_Detals.Add(new Boxes_detals
+                {
+                    time_one = item
+                });
+            }
+            foreach (var item in mane_array_two.Children.OfType<TextBox>())
+            {
+                mane_boxes_Detals[c].time_two = item;
+                c++;
+            }
+            foreach (var item in mane_array_one.Children.OfType<TextBox>()) item.Text = $"{rn.Next(1, 10)}";
+            foreach (var item in mane_array_two.Children.OfType<TextBox>()) item.Text = $"{rn.Next(1, 10)}";
         }
 
 
@@ -84,7 +121,7 @@ namespace metod_djonsona
                     try
                     {
                         int a = Convert.ToInt32(old_text);
-                        if (a == 0 && a > 99) box.Text = old_text.Substring(0, old_text.Length - 1);
+                        if (a == 0 || a > 99) box.Text = old_text.Substring(0, old_text.Length - 1);
                         count++;
                         if (count == count_children) Get_Answer_Array();
                     }
@@ -94,35 +131,101 @@ namespace metod_djonsona
             }
         }
 
+        public class Number_detals
+        {
+            public int number { get; set; }
+            public int time_one { get; set; }
+            public int time_two{ get; set; }
+        }
+
+        public class Boxes_detals
+        {
+            public TextBox number { get; set; }
+            public TextBox time_one { get; set; }
+            public TextBox time_two { get; set; }
+        }
+
         public void Get_Answer_Array()
         {
-            int[] one_st = new int[10];
-            int[] two_st = new int[10];
-            int i = 0;
+            int[] downtime_one = new int[array_number.Children.Count];
+            int[] downtime_two = new int[array_number.Children.Count];
+
+            List<Number_detals> number_Detals = new List<Number_detals>();
             var boxes = mane_array_one.Children.OfType<TextBox>();
             foreach (var box in boxes)
             {
-                one_st[i] = Convert.ToInt32(box.Text);
-                i++;
+                number_Detals.Add(new Number_detals
+                {
+                    time_one = Convert.ToInt32(box.Text)
+                });
 
             }
-            i = 0;
+            int i = 0;
             boxes = mane_array_two.Children.OfType<TextBox>();
             foreach (var box in boxes)
             {
-                two_st[i] = Convert.ToInt32(box.Text);
+                number_Detals[i].time_two = Convert.ToInt32(box.Text);
+                i++;
+            }
+            i = 0;
+            boxes = array_number.Children.OfType<TextBox>();
+            foreach (var box in boxes)
+            {
+                number_Detals[i].number = Convert.ToInt32(box.Text);
                 i++;
 
             }
-            one_st = one_st.OrderBy(x => x).ToArray();
-            two_st = two_st.OrderByDescending(x => x).ToArray();
 
-            for (int c = 0; c < answer_array_one.Children.Count; c++)
+            for (int c = 0; c < downtime_one.Length; c++)
             {
-                all_boxes[0, c].Text = Convert.ToString(one_st[c]);
-                all_boxes[1, c].Text = Convert.ToString(one_st[c]);
+                if (c > 0)
+                {
+                    downtime_one[c] = Convert.ToInt32(mane_boxes_Detals[c].time_two.Text);
+                    for (int t = 0; t < c; t++)
+                    {
+                        downtime_one[c] += Convert.ToInt32(mane_boxes_Detals[c - 1].time_two.Text)- Convert.ToInt32(mane_boxes_Detals[c - 1].time_one.Text);
+                    }
+                }
+                else downtime_one[c] = Convert.ToInt32(mane_boxes_Detals[c].time_two.Text);
             }
-            
+            downtime_one = downtime_one.OrderByDescending(x => x).ToArray();
+            DT_one.Text = $"F = {downtime_one[0]}";
+
+            int count = 0;
+            if (array_number.Children.Count % 2 == 1) count = array_number.Children.Count / 2 + 1;
+            else count = array_number.Children.Count / 2;
+
+            for (int c = 0; c < count ; c++)
+            {
+                var sort_boxes = number_Detals.OrderBy(e => e.time_one);
+                number_Detals = sort_boxes.ToList();
+                boxes_Detals[c].number.Text = Convert.ToString(number_Detals[0].number);
+                boxes_Detals[c].time_one.Text = Convert.ToString(number_Detals[0].time_one);
+                boxes_Detals[c].time_two.Text = Convert.ToString(number_Detals[0].time_two);
+                number_Detals.RemoveAt(0);
+
+                sort_boxes = number_Detals.OrderBy(e => e.time_two);
+                number_Detals = sort_boxes.ToList();
+                boxes_Detals[boxes_Detals.Count - (c+1)].number.Text = Convert.ToString(number_Detals[0].number);
+                boxes_Detals[boxes_Detals.Count - (c + 1)].time_one.Text = Convert.ToString(number_Detals[0].time_one);
+                boxes_Detals[boxes_Detals.Count - (c + 1)].time_two.Text = Convert.ToString(number_Detals[0].time_two);
+                number_Detals.RemoveAt(0);
+            }
+
+            for (int c = 0; c < downtime_two.Length; c++)
+            {
+                if (c > 0)
+                {
+                    downtime_two[c] = Convert.ToInt32(boxes_Detals[c].time_two.Text);
+                    for (int t = 0; t < c; t++)
+                    {
+                        downtime_two[c] += Convert.ToInt32(boxes_Detals[c - 1].time_one.Text) - Convert.ToInt32(mane_boxes_Detals[c - 1].time_one.Text);
+                    }
+                }
+                else downtime_two[c] = Convert.ToInt32(boxes_Detals[c].time_two.Text);
+            }
+            downtime_two = downtime_two.OrderByDescending(x => x).ToArray();
+            DT_one.Text = $"F = {downtime_two[0]}";
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
