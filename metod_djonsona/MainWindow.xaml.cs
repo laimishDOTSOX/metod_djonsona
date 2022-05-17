@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,6 +37,7 @@ namespace metod_djonsona
                 box.TextAlignment = TextAlignment.Center;
                 box.VerticalContentAlignment = VerticalAlignment.Center;
                 box.IsReadOnly = true;
+                box.Style = (Style)Resources["TextBoxStyle1"];
                 answer_array_one.Children.Add(box);
                 Grid.SetColumn(box,i);
                 boxes_Detals.Add(new Boxes_detals()
@@ -52,6 +54,7 @@ namespace metod_djonsona
                 box.TextAlignment = TextAlignment.Center;
                 box.VerticalContentAlignment = VerticalAlignment.Center;
                 box.IsReadOnly = true;
+                box.Style = (Style)Resources["TextBoxStyle1"];
                 answer_array_two.Children.Add(box);
                 Grid.SetColumn(box, i);
                 boxes_Detals[i].time_two = box;
@@ -68,6 +71,7 @@ namespace metod_djonsona
                 box.VerticalContentAlignment = VerticalAlignment.Center;
                 box.IsReadOnly = true;
                 box.Text = $"{i + 1}";
+                box.Style = (Style)Resources["TextBoxStyle1"];
                 array_number.Children.Add(box);
                 Grid.SetColumn(box, i);
                 boxes_Detals[i].number = box;
@@ -147,8 +151,7 @@ namespace metod_djonsona
 
         public void Get_Answer_Array()
         {
-            int[] downtime_one = new int[array_number.Children.Count];
-            int[] downtime_two = new int[array_number.Children.Count];
+            int[] downtime= new int[array_number.Children.Count];
 
             List<Number_detals> number_Detals = new List<Number_detals>();
             var boxes = mane_array_one.Children.OfType<TextBox>();
@@ -176,20 +179,30 @@ namespace metod_djonsona
 
             }
 
-            for (int c = 0; c < downtime_one.Length; c++)
+            for (int c = 0; c < downtime.Length; c++)
             {
                 if (c > 0)
                 {
-                    downtime_one[c] = Convert.ToInt32(mane_boxes_Detals[c].time_two.Text);
+                    downtime[c] = Convert.ToInt32(mane_boxes_Detals[c].time_one.Text);
                     for (int t = 0; t < c; t++)
                     {
-                        downtime_one[c] += Convert.ToInt32(mane_boxes_Detals[c - 1].time_two.Text)- Convert.ToInt32(mane_boxes_Detals[c - 1].time_one.Text);
+                        downtime[c] += Convert.ToInt32(mane_boxes_Detals[c - (t + 1)].time_one.Text) - Convert.ToInt32(mane_boxes_Detals[c - (t + 1)].time_two.Text);
                     }
+                    Debug.WriteLine(downtime[c]);
                 }
-                else downtime_one[c] = Convert.ToInt32(mane_boxes_Detals[c].time_two.Text);
+                else
+                {
+                    downtime[c] = Convert.ToInt32(mane_boxes_Detals[c].time_one.Text);
+                    Debug.WriteLine(downtime[c]);
+                }
             }
-            downtime_one = downtime_one.OrderByDescending(x => x).ToArray();
-            DT_one.Text = $"F = {downtime_one[0]}";
+            downtime = downtime.OrderByDescending(x => x).ToArray();
+            Debug.WriteLine("\n");
+            foreach (var item in downtime)
+            {
+                Debug.WriteLine(item);
+            }
+            DT_one.Text = $"F = {downtime[0]}";
 
             int count = 0;
             if (array_number.Children.Count % 2 == 1) count = array_number.Children.Count / 2 + 1;
@@ -212,20 +225,31 @@ namespace metod_djonsona
                 number_Detals.RemoveAt(0);
             }
 
-            for (int c = 0; c < downtime_two.Length; c++)
+            Debug.WriteLine("\nDT_TWO_________________________________________");
+            for (int c = 0; c < downtime.Length; c++)
             {
                 if (c > 0)
                 {
-                    downtime_two[c] = Convert.ToInt32(boxes_Detals[c].time_two.Text);
+                    downtime[c] = Convert.ToInt32(boxes_Detals[c].time_one.Text);
                     for (int t = 0; t < c; t++)
                     {
-                        downtime_two[c] += Convert.ToInt32(boxes_Detals[c - 1].time_one.Text) - Convert.ToInt32(mane_boxes_Detals[c - 1].time_one.Text);
+                        downtime[c] += Convert.ToInt32(boxes_Detals[c - (t + 1)].time_one.Text) - Convert.ToInt32(boxes_Detals[c - (t + 1)].time_two.Text);
                     }
+                    Debug.WriteLine(downtime[c]);
                 }
-                else downtime_two[c] = Convert.ToInt32(boxes_Detals[c].time_two.Text);
+                else
+                {
+                    downtime[c] = Convert.ToInt32(boxes_Detals[c].time_one.Text);
+                    Debug.WriteLine(downtime[c]);
+                }
             }
-            downtime_two = downtime_two.OrderByDescending(x => x).ToArray();
-            DT_one.Text = $"F = {downtime_two[0]}";
+            downtime = downtime.OrderByDescending(x => x).ToArray();
+            Debug.WriteLine("\n");
+            foreach (var item in downtime)
+            {
+                Debug.WriteLine(item);
+            }
+            DT_two.Text = $"F = {downtime[0]}";
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -241,6 +265,9 @@ namespace metod_djonsona
 
             boxes = answer_array_one.Children.OfType<TextBox>();
             foreach (var box in boxes) box.Text = "";
+
+            DT_one.Text = "";
+            DT_two.Text = "";
         }
     }
 }
