@@ -266,6 +266,14 @@ namespace metod_djonsona
             boxes = answer_array_one.Children.OfType<TextBox>();
             foreach (var box in boxes) box.Text = "";
 
+            int i = 1;
+            boxes = array_number.Children.OfType<TextBox>();
+            foreach (var box in boxes)
+            {
+                box.Text = $"{i}";
+                i++;
+            }
+
             DT_one.Text = "";
             DT_two.Text = "";
         }
