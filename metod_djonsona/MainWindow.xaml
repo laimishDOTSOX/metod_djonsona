@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:metod_djonsona"
         mc:Ignorable="d"
-        Title=".SOX" Height="450" Width="800">
+        Title=".SOX" Height="450" Width="800" Icon="https://i.pinimg.com/564x/39/8e/ca/398eca16d652c69d9f1f7b7ec256ba8f.jpg">
     <Window.Resources>
         <SolidColorBrush x:Key="TextBox.Static.Border" Color="Black"/>
         <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="White"/>
