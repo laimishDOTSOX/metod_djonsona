@@ -26,7 +26,7 @@ namespace metod_djonsona
         public MainWindow()
         {
             InitializeComponent();
-            Random rn = new Random();
+           
             int count = answer_array_one.ColumnDefinitions.Count;
             for (int i = 0; i < count; i++)
             {
@@ -90,8 +90,6 @@ namespace metod_djonsona
                 mane_boxes_Detals[c].time_two = item;
                 c++;
             }
-            foreach (var item in mane_array_one.Children.OfType<TextBox>()) item.Text = $"{rn.Next(1, 10)}";
-            foreach (var item in mane_array_two.Children.OfType<TextBox>()) item.Text = $"{rn.Next(1, 10)}";
         }
 
 
@@ -164,11 +162,13 @@ namespace metod_djonsona
 
             }
             int i = 0;
+            int all_time = 0;
             boxes = mane_array_two.Children.OfType<TextBox>();
             foreach (var box in boxes)
             {
                 number_Detals[i].time_two = Convert.ToInt32(box.Text);
                 i++;
+                all_time += Convert.ToInt32(box.Text);
             }
             i = 0;
             boxes = array_number.Children.OfType<TextBox>();
@@ -202,8 +202,9 @@ namespace metod_djonsona
             {
                 Debug.WriteLine(item);
             }
-            DT_one.Text = $"F = {downtime[0]}";
-
+            all_time += downtime[0];
+            DT_one.Text = $"F = {downtime[0]}\nT = {all_time}";
+            all_time -= downtime[0];
             int count = 0;
             if (array_number.Children.Count % 2 == 1) count = array_number.Children.Count / 2 + 1;
             else count = array_number.Children.Count / 2;
@@ -249,7 +250,8 @@ namespace metod_djonsona
             {
                 Debug.WriteLine(item);
             }
-            DT_two.Text = $"F = {downtime[0]}";
+            all_time += downtime[0];
+            DT_two.Text = $"F = {downtime[0]}\nT = {all_time}";
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -276,6 +278,14 @@ namespace metod_djonsona
 
             DT_one.Text = "";
             DT_two.Text = "";
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Button_Click(sender,e);
+            Random rn = new Random();
+            foreach (var item in mane_array_one.Children.OfType<TextBox>()) item.Text = $"{rn.Next(1, 10)}";
+            foreach (var item in mane_array_two.Children.OfType<TextBox>()) item.Text = $"{rn.Next(1, 10)}";
         }
     }
 }
