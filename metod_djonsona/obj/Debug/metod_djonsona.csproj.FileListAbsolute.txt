@@ -1,0 +1,15 @@
+C:\Users\K12\Source\Repos\metod_djonsona\metod_djonsona\bin\Debug\metod_djonsona.exe.config
+C:\Users\K12\Source\Repos\metod_djonsona\metod_djonsona\bin\Debug\metod_djonsona.exe
+C:\Users\K12\Source\Repos\metod_djonsona\metod_djonsona\bin\Debug\metod_djonsona.pdb
+C:\Users\K12\Source\Repos\metod_djonsona\metod_djonsona\obj\Debug\metod_djonsona.csproj.AssemblyReference.cache
+C:\Users\K12\Source\Repos\metod_djonsona\metod_djonsona\obj\Debug\MainWindow.g.cs
+C:\Users\K12\Source\Repos\metod_djonsona\metod_djonsona\obj\Debug\App.g.cs
+C:\Users\K12\Source\Repos\metod_djonsona\metod_djonsona\obj\Debug\metod_djonsona_MarkupCompile.cache
+C:\Users\K12\Source\Repos\metod_djonsona\metod_djonsona\obj\Debug\metod_djonsona_MarkupCompile.lref
+C:\Users\K12\Source\Repos\metod_djonsona\metod_djonsona\obj\Debug\MainWindow.baml
+C:\Users\K12\Source\Repos\metod_djonsona\metod_djonsona\obj\Debug\metod_djonsona.g.resources
+C:\Users\K12\Source\Repos\metod_djonsona\metod_djonsona\obj\Debug\metod_djonsona.Properties.Resources.resources
+C:\Users\K12\Source\Repos\metod_djonsona\metod_djonsona\obj\Debug\metod_djonsona.csproj.GenerateResource.cache
+C:\Users\K12\Source\Repos\metod_djonsona\metod_djonsona\obj\Debug\metod_djonsona.csproj.CoreCompileInputs.cache
+C:\Users\K12\Source\Repos\metod_djonsona\metod_djonsona\obj\Debug\metod_djonsona.exe
+C:\Users\K12\Source\Repos\metod_djonsona\metod_djonsona\obj\Debug\metod_djonsona.pdb
