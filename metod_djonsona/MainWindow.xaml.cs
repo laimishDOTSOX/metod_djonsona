@@ -21,6 +21,7 @@ namespace metod_djonsona
     /// </summary>
     public partial class MainWindow : Window
     {
+        //списки объектов класса Boxes_detals для хранения ссылок на блоки и послебующего обращения к ним
         List<Boxes_detals> boxes_Detals = new List<Boxes_detals>();
         List<Boxes_detals> mane_boxes_Detals = new List<Boxes_detals>();
         public MainWindow()
@@ -28,6 +29,7 @@ namespace metod_djonsona
             InitializeComponent();
            
             int count = answer_array_one.ColumnDefinitions.Count;
+            //создание блоков для времени обработки на первом станке
             for (int i = 0; i < count; i++)
             {
                 TextBox box = new TextBox();
@@ -45,6 +47,7 @@ namespace metod_djonsona
                     time_one = box
                 });
             }
+            //создание блоков для времени обработки на втором станке
             for (int i = 0; i < count; i++)
             {
                 TextBox box = new TextBox();
@@ -59,6 +62,7 @@ namespace metod_djonsona
                 Grid.SetColumn(box, i);
                 boxes_Detals[i].time_two = box;
             }
+            //создание блоков для номеров деталей
             for (int i = 0; i < count; i++)
             {
                 TextBox box = new TextBox();
@@ -76,7 +80,7 @@ namespace metod_djonsona
                 Grid.SetColumn(box, i);
                 boxes_Detals[i].number = box;
             }
-
+            //добавляем блоки из первой матрицы в список
             int c = 0;
             foreach (var item in mane_array_one.Children.OfType<TextBox>())
             {
@@ -92,13 +96,12 @@ namespace metod_djonsona
             }
         }
 
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e) 
         {
-            var boxes = mane_array_one.Children.OfType<TextBox>();
+            //проверка на отрицание, ноль, 3-х значные числа и буквы
             int count_children = mane_array_one.Children.Count*2;
             int count = 0;
-            foreach (var box in boxes)
+            foreach (var box in mane_array_one.Children.OfType<TextBox>())
             {
                 string old_text = box.Text;
                 if (old_text != "")
@@ -106,7 +109,7 @@ namespace metod_djonsona
                     try
                     {
                         int a = Convert.ToInt32(old_text);
-                        if (a == 0 || old_text.Length > 2) box.Text = old_text.Substring(0, old_text.Length - 1);
+                        if (a == 0 || old_text.Length > 2 || old_text.Substring(0,1) == "-") box.Text = old_text.Substring(1, old_text.Length - 1);
                         if (old_text.Substring(0, 1) == "0") box.Text = old_text.Substring(1, old_text.Length - 1);
                         count++;
                     }
@@ -114,8 +117,8 @@ namespace metod_djonsona
                 }
                 
             }
-            boxes = mane_array_two.Children.OfType<TextBox>();
-            foreach (var box in boxes)
+            
+            foreach (var box in mane_array_two.Children.OfType<TextBox>())
             {
                 string old_text = box.Text;
                 if (old_text != "")
@@ -125,7 +128,7 @@ namespace metod_djonsona
                         int a = Convert.ToInt32(old_text);
                         if (a == 0 || a > 99) box.Text = old_text.Substring(0, old_text.Length - 1);
                         count++;
-                        if (count == count_children) Get_Answer_Array();
+                        if (count == count_children) Get_Answer_Array(); //если все ячейки заполнены выполняем метод 
                     }
                     catch { box.Text = old_text.Substring(0, old_text.Length - 1); }
                 }
@@ -149,11 +152,11 @@ namespace metod_djonsona
 
         public void Get_Answer_Array()
         {
-            int[] downtime= new int[array_number.Children.Count];
+            int[] downtime= new int[array_number.Children.Count]; //массив для подсчета времени простоя
 
-            List<Number_detals> number_Detals = new List<Number_detals>();
-            var boxes = mane_array_one.Children.OfType<TextBox>();
-            foreach (var box in boxes)
+            List<Number_detals> number_Detals = new List<Number_detals>();//лист для хранения значений деталей (номер, время обработки на 1 и 2 станках)
+            //заполняем список
+            foreach (var box in mane_array_one.Children.OfType<TextBox>())
             {
                 number_Detals.Add(new Number_detals
                 {
@@ -163,22 +166,21 @@ namespace metod_djonsona
             }
             int i = 0;
             int all_time = 0;
-            boxes = mane_array_two.Children.OfType<TextBox>();
-            foreach (var box in boxes)
+            foreach (var box in mane_array_two.Children.OfType<TextBox>())
             {
                 number_Detals[i].time_two = Convert.ToInt32(box.Text);
                 i++;
-                all_time += Convert.ToInt32(box.Text);
+                all_time += Convert.ToInt32(box.Text);//считаем время обработки на 2 станке 
             }
             i = 0;
-            boxes = array_number.Children.OfType<TextBox>();
-            foreach (var box in boxes)
+            //заполняем список
+            foreach (var box in mane_number.Children.OfType<TextBox>())
             {
                 number_Detals[i].number = Convert.ToInt32(box.Text);
                 i++;
 
             }
-
+            //находим времена простоя 
             for (int c = 0; c < downtime.Length; c++)
             {
                 if (c > 0)
@@ -196,27 +198,28 @@ namespace metod_djonsona
                     Debug.WriteLine(downtime[c]);
                 }
             }
-            downtime = downtime.OrderByDescending(x => x).ToArray();
+            downtime = downtime.OrderByDescending(x => x).ToArray();//сортируем массив по убыванию, чтобы максимальное число находилось на 0 индексе 
             Debug.WriteLine("\n");
             foreach (var item in downtime)
             {
                 Debug.WriteLine(item);
             }
-            all_time += downtime[0];
+            all_time += downtime[0];//общее время обработки на обоих станках в 1 матрице
             DT_one.Text = $"F = {downtime[0]}\nT = {all_time}";
             all_time -= downtime[0];
             int count = 0;
+            //получаем количество шагов
             if (array_number.Children.Count % 2 == 1) count = array_number.Children.Count / 2 + 1;
             else count = array_number.Children.Count / 2;
-
             for (int c = 0; c < count ; c++)
             {
-                var sort_boxes = number_Detals.OrderBy(e => e.time_one);
+                var sort_boxes = number_Detals.OrderBy(e => e.time_one);//сортируем по возрастанию по времени обработки на 1 станке 
                 number_Detals = sort_boxes.ToList();
+                //заполняем данными детали с начала очереди
                 boxes_Detals[c].number.Text = Convert.ToString(number_Detals[0].number);
                 boxes_Detals[c].time_one.Text = Convert.ToString(number_Detals[0].time_one);
                 boxes_Detals[c].time_two.Text = Convert.ToString(number_Detals[0].time_two);
-                number_Detals.RemoveAt(0);
+                number_Detals.RemoveAt(0);//удаляем деталь из списка, тк как мы уже поместили ее в очередь
 
                 sort_boxes = number_Detals.OrderBy(e => e.time_two);
                 number_Detals = sort_boxes.ToList();
@@ -250,7 +253,7 @@ namespace metod_djonsona
             {
                 Debug.WriteLine(item);
             }
-            all_time += downtime[0];
+            all_time += downtime[0];//общее время обработки на обоих станках в 1 матрице
             DT_two.Text = $"F = {downtime[0]}\nT = {all_time}";
         }
 
@@ -286,6 +289,11 @@ namespace metod_djonsona
             Random rn = new Random();
             foreach (var item in mane_array_one.Children.OfType<TextBox>()) item.Text = $"{rn.Next(1, 10)}";
             foreach (var item in mane_array_two.Children.OfType<TextBox>()) item.Text = $"{rn.Next(1, 10)}";
+        }
+
+        private void TextBlock_MouseEnter(object sender, MouseEventArgs e)
+        {
+
         }
     }
 }

@@ -95,17 +95,14 @@
                                 <Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background}"/>
                                 <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}"/>
                                 <Setter Property="TextElement.Foreground" TargetName="border" Value="{StaticResource Button.MouseOver.Foreground}"/>
+                                <Setter Property="TextBlock.Foreground"  Value="{StaticResource Button.MouseOver.Foreground}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="true">
                                 <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}"/>
                                 <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>
-                                <Setter Property="TextElement.Foreground" TargetName="border" Value="{StaticResource Button.MouseOver.Foreground}"/>
+
                             </Trigger>
-                            <Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
-                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
-                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
-                            </Trigger>
+                          
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -116,7 +113,7 @@
             <Setter Property="TextTrimming" Value="None"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="TextBlock.Foreground" Value="Black" />
+                    <Setter Property="Foreground" Value="Black" />
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -132,10 +129,9 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
-            <RowDefinition Height="0.2
-*"/>
+            <RowDefinition Height="0.2*"/>
         </Grid.RowDefinitions>
-
+        <Label Grid.Column="1" Content="Решение математической модели методом Джонсона" Foreground="White" HorizontalContentAlignment="Center" FontSize="18"/>
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition/>
@@ -149,7 +145,7 @@
             <TextBox Grid.Column="1" Grid.Row="0" Text="1" Background="Black" Foreground="White" TextAlignment="Center"  VerticalContentAlignment="Center" FontSize="30" BorderBrush="White" BorderThickness="0 1 1 1" IsReadOnly="True" Style="{DynamicResource TextBoxStyle1}"/>
             <TextBox Grid.Column="1" Grid.Row="1" Text="2" Background="Black" Foreground="White" TextAlignment="Center"  VerticalContentAlignment="Center" FontSize="30" BorderBrush="White" BorderThickness="0 1 1 1" IsReadOnly="True" Style="{DynamicResource TextBoxStyle1}"/>
         </Grid>
-        <Grid Grid.Column="1" Grid.Row="0" Margin="0 47 0 0">
+        <Grid Grid.Column="1" Grid.Row="0" Margin="0 47 0 0" x:Name="mane_number">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -229,12 +225,8 @@
         </Grid>
 
         <TextBox IsReadOnly="True" Grid.Column="2" Grid.Row="1" Margin="0 0 0 40" FontSize="20" BorderThickness="0" Background="Black" Foreground="White" TextAlignment="Center" VerticalContentAlignment="Center" x:Name="DT_one"/>
-        <Button Grid.Column="2" Grid.Row="1" Margin="10 70 10 0" BorderBrush="White" BorderThickness="2"  Foreground="White" Background="Black" Content="ОЧИСТИТЬ" FontSize="12" Click="Button_Click" Style="{DynamicResource ButtonStyle1}" />
-        <Button Grid.Column="2" Grid.Row="2" Margin="10 5 10 50" BorderBrush="White" BorderThickness="2"  Foreground="White" Background="Black"  FontSize="12" Style="{DynamicResource ButtonStyle1}" Click="Button_Click_1" >
-            <Button.Content>
-                <TextBlock Style="{DynamicResource TextBlockStyle1}" Text="СЛУЧАЙНЫЕ ЧИСЛА" TextWrapping="Wrap" TextAlignment="Center"/>
-            </Button.Content>
-        </Button>
+        <Button Grid.Column="2" Grid.Row="1" Margin="10 70 10 0" BorderBrush="White" BorderThickness="2"  Foreground="White" Background="Black" Content="CLEAR" FontSize="12" Click="Button_Click" Style="{DynamicResource ButtonStyle1}" x:Name="clear" />
+        <Button Grid.Column="2" Grid.Row="2" Margin="10 5 10 65" BorderBrush="White" BorderThickness="2"  Foreground="White" Background="Black"  FontSize="12" Style="{Binding ElementName=clear,Path=Style}" Click="Button_Click_1"  Content="RANDOM"/>
         <Grid Grid.Column="0" Grid.Row="3">
             <Grid.RowDefinitions>
                 <RowDefinition/>
